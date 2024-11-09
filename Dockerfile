@@ -1,26 +1,29 @@
-# Use an official Node.js runtime as the base image
-FROM node:18-alpine
+# Stage 1: Build
+FROM node:18-alpine AS build
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy the package.json and package-lock.json files to the working directory
 COPY package.json yarn.lock ./
 
-# Install dependencies
 RUN yarn install
 
-# Install PM2 globally
-RUN yarn global add pm2
-
-# Copy the rest of the application files
 COPY . .
-
-# Build the TypeScript code
 RUN yarn build
 
-# Expose the desired port (replace with your port if different)
+# Stage 2: Final image
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/package.json ./package.json
+
+RUN yarn global add pm2
+
 EXPOSE 3000
 
-# Use PM2 to start the application
 CMD ["pm2-runtime", "dist/index.cjs"]
+
+
+
