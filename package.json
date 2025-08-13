@@ -6,7 +6,8 @@
 	"scripts": {
 		"dev": "tsx watch src/index.ts",
 		"start": "node dist/index.js",
-		"build": "tsup src/index.ts --minify"
+		"build": "tsc --project tsconfig.json",
+		"commands:deploy": "npm run build && node --enable-source-maps dist/deploy-commands.js"
 	},
 	"dependencies": {
 		"alchemy-sdk": "^3.4.3",
@@ -17,9 +18,10 @@
 		"nodemon": "^3.1.7"
 	},
 	"devDependencies": {
+		"ts-node": "^10.9.2",
 		"tsup": "^8.3.0",
 		"tsx": "^4.19.1",
-		"typescript": "^5.6.3",
+		"typescript": "^5.9.2",
 		"vite": "^5.4.8"
 	}
 }
