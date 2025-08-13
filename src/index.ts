@@ -1,7 +1,6 @@
 import { ActivityType, Client } from "discord.js";
 import { config } from "./config";
-import { getAllBalance } from "./service/getAllBalance";
-import { getWalletBalance } from "./service/getBalance";
+import { getWalletBalances } from "./service/getBalance";
 
 const client = new Client({
 	intents: ["Guilds", "GuildMessages", "DirectMessages"],
@@ -10,10 +9,10 @@ const client = new Client({
 client.once("ready", async () => {
 	console.log("Discord bot is ready! 🤖");
 
-	const walletBalance = await getWalletBalance();
+	const walletBalance = await getWalletBalances();
 
 	client.user?.setActivity({
-		name: `${walletBalance.balance} POL | ${walletBalance.usdtBalance} USDT`,
+		name: `${walletBalance.totalUSD} USD`,
 		type: ActivityType.Watching,
 	});
 });
